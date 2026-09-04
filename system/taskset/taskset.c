@@ -59,9 +59,14 @@ static bool get_cpuset(const char *arg, cpu_set_t *cpu_set)
   DEBUGASSERT(NULL != arg);
 
   bool ret = false;
-  int val  = atoi(arg);
+  char *endptr;
+  unsigned long val;
 
-  if (0 < val && val < (1 << CONFIG_SMP_NCPUS))
+  errno = 0;
+  val = strtoul(arg, &endptr, 0);
+
+  if (errno == 0 && *arg != '\0' && *endptr == '\0' && 0 < val &&
+      val < (1ul << CONFIG_SMP_NCPUS))
     {
       *cpu_set = (cpu_set_t)val;
       ret = true;
