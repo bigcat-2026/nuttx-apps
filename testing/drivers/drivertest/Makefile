@@ -158,7 +158,7 @@ MAINSRC  += drivertest_regulator.c
 PROGNAME += cmocka_driver_regulator
 endif
 
-ifneq ($(CONFIG_LV_USE_NUTTX_TOUCHSCREEN),)
+ifeq ($(CONFIG_GRAPHICS_LVGL)$(CONFIG_LV_USE_NUTTX_TOUCHSCREEN),yy)
 MAINSRC  += drivertest_touchpanel.c
 PROGNAME += cmocka_driver_touchpanel
 endif
