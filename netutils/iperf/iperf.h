@@ -86,6 +86,16 @@ struct iperf_cfg_t
 int iperf_start(FAR struct iperf_cfg_t *cfg);
 
 /****************************************************************************
+ * Name: iperf_start_ex
+ *
+ * Description:
+ *   Start iperf task with an optional traffic buffer length.
+ *
+ ****************************************************************************/
+
+int iperf_start_ex(FAR struct iperf_cfg_t *cfg, uint32_t buffer_len);
+
+/****************************************************************************
  * Name: iperf_stop
  *
  * Description:

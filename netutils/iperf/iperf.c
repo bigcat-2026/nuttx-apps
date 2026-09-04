@@ -954,6 +954,11 @@ static uint32_t iperf_get_buffer_len(FAR struct iperf_ctrl_t *ctrl)
 
 int iperf_start(FAR struct iperf_cfg_t *cfg)
 {
+  return iperf_start_ex(cfg, 0);
+}
+
+int iperf_start_ex(FAR struct iperf_cfg_t *cfg, uint32_t buffer_len)
+{
   struct iperf_ctrl_t ctrl;
   struct sched_param param;
   pthread_attr_t attr;
@@ -966,10 +971,17 @@ int iperf_start(FAR struct iperf_cfg_t *cfg)
       return -1;
     }
 
+  if (buffer_len != 0 &&
+      (buffer_len < 16 || buffer_len > (1 << 20)))
+    {
+      return -1;
+    }
+
   memset(&ctrl, 0, sizeof(ctrl));
   memcpy(&ctrl.cfg, cfg, sizeof(*cfg));
   ctrl.finish = false;
-  ctrl.buffer_len = iperf_get_buffer_len(&ctrl);
+  ctrl.buffer_len = buffer_len != 0 ? buffer_len :
+                    iperf_get_buffer_len(&ctrl);
   ctrl.buffer = (FAR uint8_t *)malloc(ctrl.buffer_len);
   if (ctrl.buffer == NULL)
     {
